@@ -1,0 +1,18 @@
+# Use for Production configuration settings needed to bootstrap the application.
+# Set the configuration folder to the location where your config files will be stored.
+# This should normally be set at deployment time by your deployment scripts, or passed in via the
+# CONFIGURATION__BASEPATH environment variable.
+#
+# Relative paths are relative to the folder where your executable is stored.
+#
+# Example (Linux):
+#
+# Configuration:
+#   BasePath: /app/config
+#
+# Example (Windows)
+#
+# Configuration:
+#   BasePath: 'D:\SmartSuite\Config'
+Configuration:
+  BasePath: Config

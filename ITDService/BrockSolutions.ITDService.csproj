@@ -1,0 +1,38 @@
+<Project Sdk="Microsoft.NET.Sdk.Worker">
+
+	<PropertyGroup>
+		<TargetFramework>net6.0</TargetFramework>
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<UserSecretsId>dotnet-AzureWorkerService-F11485B2-4A3E-481C-A134-F224F369260D</UserSecretsId>
+		<DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+		<DockerfileContext>..\..</DockerfileContext>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="BrockSolutions.DapperWrapper" Version="1.7.1" />
+		<PackageReference Include="BrockSolutions.Configuration" Version="1.5.0" />
+		<PackageReference Include="BrockSolutions.Configuration.AzureAppConfig" Version="1.5.0" />
+		<PackageReference Include="BrockSolutions.Service.NLog.Logging" Version="2.0.1" />
+		<PackageReference Include="BrockSolutions.Web.Authentication" Version="2.2.2" />
+		<PackageReference Include="IdentityModel" Version="6.2.0" />
+		<PackageReference Include="Microsoft.Extensions.Configuration.AzureAppConfiguration" Version="6.1.1" />
+		<PackageReference Include="Microsoft.Extensions.Hosting.WindowsServices" Version="6.0.1" />
+		<PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.18.1" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<None Update="appsettings.Development.yaml">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="appsettings.yaml">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="Config\Default\ITDService.yaml">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+		<None Update="Config\ITDService.Development.yaml">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+	</ItemGroup>
+</Project>
