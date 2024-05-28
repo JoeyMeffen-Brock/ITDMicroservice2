@@ -13,7 +13,7 @@ namespace BrockSolutions.ITDService.UnitTests
         public void noCriteriaMet_isNotITDComplete()
         {
             ITDEligibilityProvider provider = TestHelpers.CreateProvider();
-            Passenger incompletePassenger = new Passenger(0, new List<BCBP>(), new List<BSM>(), false, false);
+            Passenger incompletePassenger = new Passenger(0, false, false);
 
             bool result = provider.CheckIfPassengerIsITDComplete(incompletePassenger);
             Assert.False(result);
@@ -23,7 +23,7 @@ namespace BrockSolutions.ITDService.UnitTests
         public void passengerBoardedAtSmartGate_isITDComplete()
         {
             ITDEligibilityProvider provider = TestHelpers.CreateProvider();
-            Passenger smartGateScannedPassenger = new Passenger(0, new List<BCBP>(), new List<BSM>(), true, false);
+            Passenger smartGateScannedPassenger = new Passenger(0, true, false);
 
             bool result = provider.CheckIfPassengerIsITDComplete(smartGateScannedPassenger);
             Assert.True(result);
@@ -33,7 +33,7 @@ namespace BrockSolutions.ITDService.UnitTests
         public void passengerHasBDXMessage_isITDComplete()
         {
             ITDEligibilityProvider provider = TestHelpers.CreateProvider();
-            Passenger bdxMessagePassenger = new Passenger(0, new List<BCBP>(), new List<BSM>(), false, true);
+            Passenger bdxMessagePassenger = new Passenger(0, false, true);
 
             bool result = provider.CheckIfPassengerIsITDComplete(bdxMessagePassenger);
             Assert.True(result);
@@ -43,16 +43,8 @@ namespace BrockSolutions.ITDService.UnitTests
         public void passengerHasBoardedBSM_isITDComplete()
         {
             ITDEligibilityProvider provider = TestHelpers.CreateProvider();
-            List<BSM> bsmsWithBoardedBSM = new List<BSM>()
-            {
-                new BSM()
-                {
-                    IsITDEligible = true,
-                    BoardedBSM = true
-                }
-            };
-
-            Passenger boardedBSMPassenger = new Passenger(0, new List<BCBP>(), bsmsWithBoardedBSM, false, false);
+            Passenger boardedBSMPassenger = new Passenger(0, false, false);
+            boardedBSMPassenger.HasBoardedBSM = true;
 
             bool result = provider.CheckIfPassengerIsITDComplete(boardedBSMPassenger);
             Assert.True(result);

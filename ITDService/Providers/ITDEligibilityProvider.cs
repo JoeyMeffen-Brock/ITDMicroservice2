@@ -48,12 +48,12 @@ namespace BrockSolutions.ITDService.Providers
                 return false;
             }
 
-            if (passenger.TrackedBCBPs.Any(bcbp => !bcbp.IsITDEligible))
+            if (passenger.HasIneligibleBCBP)
             {
                 return false;
             }
 
-            if (passenger.TrackedBSMs.Any(bsm => !bsm.IsITDEligible))
+            if (passenger.HasIneligibleBSM)
             {
                 return false;
             }
@@ -73,7 +73,7 @@ namespace BrockSolutions.ITDService.Providers
                 return true;
             }
 
-            if (passenger.TrackedBSMs.Any(bsm => bsm.BoardedBSM))
+            if (passenger.HasBoardedBSM)
             {
                 return true;
             }

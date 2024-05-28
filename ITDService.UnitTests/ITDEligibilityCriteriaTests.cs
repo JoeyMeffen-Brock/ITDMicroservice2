@@ -13,21 +13,7 @@ namespace BrockSolutions.ITDService.UnitTests
         public void validRoute_isITDEligible()
         {
             ITDEligibilityProvider provider = TestHelpers.CreateProvider();
-            List<BCBP> validBCBPs = new List<BCBP>()
-            {
-                new BCBP()
-                {
-                    IsITDEligible = true
-                }
-            };
-            List<BSM> validBSMs = new List<BSM>()
-            {
-                new BSM()
-                {
-                    IsITDEligible = true
-                }
-            };
-            Passenger validPassenger = new Passenger(2, validBCBPs, validBSMs, false, false);
+            Passenger validPassenger = new Passenger(2, false, false);
 
             Flight validFlight = new Flight("AC", true);
             Route validRoute = new Route()
@@ -43,21 +29,7 @@ namespace BrockSolutions.ITDService.UnitTests
         public void ineligibleRoute_notITDEligible()
         {
             ITDEligibilityProvider provider = TestHelpers.CreateProvider();
-            List<BCBP> validBCBPs = new List<BCBP>()
-            {
-                new BCBP()
-                {
-                    IsITDEligible = true
-                }
-            };
-            List<BSM> validBSMs = new List<BSM>()
-            {
-                new BSM()
-                {
-                    IsITDEligible = true
-                }
-            };
-            Passenger validPassenger = new Passenger(2, validBCBPs, validBSMs, false, false);
+            Passenger validPassenger = new Passenger(2, false, false);
 
             Flight validFlight = new Flight("AC", true);
             Route ineligibleRoute = new Route()
@@ -87,7 +59,7 @@ namespace BrockSolutions.ITDService.UnitTests
                     IsITDEligible = true
                 }
             };
-            Passenger validPassenger = new Passenger(2, validBCBPs, validBSMs, false, false);
+            Passenger validPassenger = new Passenger(2, false, false);
 
             Flight invalidCarrierFlight = new Flight("VA", true);
             Route validRoute = new Route()
@@ -103,21 +75,7 @@ namespace BrockSolutions.ITDService.UnitTests
         public void noCheckedBags_notITDEligible()
         {
             ITDEligibilityProvider provider = TestHelpers.CreateProvider();
-            List<BCBP> validBCBPs = new List<BCBP>()
-            {
-                new BCBP()
-                {
-                    IsITDEligible = true
-                }
-            };
-            List<BSM> validBSMs = new List<BSM>()
-            {
-                new BSM()
-                {
-                    IsITDEligible = true
-                }
-            };
-            Passenger noBagPassenger = new Passenger(0, validBCBPs, validBSMs, false, false);
+            Passenger noBagPassenger = new Passenger(0, false, false);
 
             Flight validFlight = new Flight("AC", true);
             Route validRoute = new Route()
@@ -133,21 +91,8 @@ namespace BrockSolutions.ITDService.UnitTests
         public void ineligibleBCBP_notITDEligible()
         {
             ITDEligibilityProvider provider = TestHelpers.CreateProvider();
-            List<BCBP> ineligibleBCBPs = new List<BCBP>()
-            {
-                new BCBP()
-                {
-                    IsITDEligible = false
-                }
-            };
-            List<BSM> validBSMs = new List<BSM>()
-            {
-                new BSM()
-                {
-                    IsITDEligible = true
-                }
-            };
-            Passenger badBCBPPassenger = new Passenger(2, ineligibleBCBPs, validBSMs, false, false);
+            Passenger badBCBPPassenger = new Passenger(2, false, false);
+            badBCBPPassenger.HasIneligibleBCBP = true;
 
             Flight validFlight = new Flight("AC", true);
             Route validRoute = new Route()
@@ -163,21 +108,8 @@ namespace BrockSolutions.ITDService.UnitTests
         public void ineligibleBSM_notITDEligible()
         {
             ITDEligibilityProvider provider = TestHelpers.CreateProvider();
-            List<BCBP> validBCBPs = new List<BCBP>()
-            {
-                new BCBP()
-                {
-                    IsITDEligible = true
-                }
-            };
-            List<BSM> ineligibleBSMs = new List<BSM>()
-            {
-                new BSM()
-                {
-                    IsITDEligible = false
-                }
-            };
-            Passenger badBCBPPassenger = new Passenger(2, validBCBPs, ineligibleBSMs, false, false);
+            Passenger badBSMPassenger = new Passenger(2, false, false);
+            badBSMPassenger.HasIneligibleBSM = true;
 
             Flight validFlight = new Flight("AC", true);
             Route validRoute = new Route()
@@ -185,7 +117,7 @@ namespace BrockSolutions.ITDService.UnitTests
                 IsITDEligible = true
             };
 
-            bool result = provider.CheckIfPassengerisITDEligible(badBCBPPassenger, validFlight, validRoute);
+            bool result = provider.CheckIfPassengerisITDEligible(badBSMPassenger, validFlight, validRoute);
             Assert.False(result);
         }
 
@@ -193,21 +125,7 @@ namespace BrockSolutions.ITDService.UnitTests
         public void ineligibleFlight_notITDEligible()
         {
             ITDEligibilityProvider provider = TestHelpers.CreateProvider();
-            List<BCBP> validBCBPs = new List<BCBP>()
-            {
-                new BCBP()
-                {
-                    IsITDEligible = true
-                }
-            };
-            List<BSM> validBSMs = new List<BSM>()
-            {
-                new BSM()
-                {
-                    IsITDEligible = true
-                }
-            };
-            Passenger validPassenger = new Passenger(2, validBCBPs, validBSMs, false, false);
+            Passenger validPassenger = new Passenger(2, false, false);
 
             Flight ineligibleFlight = new Flight("AC", false);
             Route validRoute = new Route()
