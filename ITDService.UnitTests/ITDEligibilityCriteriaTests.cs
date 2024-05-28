@@ -12,10 +12,21 @@ namespace BrockSolutions.ITDService.UnitTests
         [Fact]
         public void validRoute_isITDEligible()
         {
-            ITDEligibilityProvider provider = TestHelpers.CreateProvider();
-            Passenger validPassenger = new Passenger(2, false, false);
+            ITDEligibilityProvider provider = TestHelpers.CreateITDProvider();
+            Passenger validPassenger = new Passenger()
+            {
+                PassengerID = 0,
+                CheckedBagCount = 2,
+                HasIneligibleBCBP = false,
+                HasIneligibleBSM = false
+            };
 
-            Flight validFlight = new Flight("AC", true);
+            Flight validFlight = new Flight()
+            {
+                Carrier = "AC",
+                IsITDEligible = true,
+                Market = Flight.FlightMarket.Transborder
+            };
             Route validRoute = new Route()
             {
                 IsITDEligible = true
@@ -28,10 +39,21 @@ namespace BrockSolutions.ITDService.UnitTests
         [Fact]
         public void ineligibleRoute_notITDEligible()
         {
-            ITDEligibilityProvider provider = TestHelpers.CreateProvider();
-            Passenger validPassenger = new Passenger(2, false, false);
+            ITDEligibilityProvider provider = TestHelpers.CreateITDProvider();
+            Passenger validPassenger = new Passenger()
+            {
+                PassengerID = 0,
+                CheckedBagCount = 2,
+                HasIneligibleBCBP = false,
+                HasIneligibleBSM = false
+            };
 
-            Flight validFlight = new Flight("AC", true);
+            Flight validFlight = new Flight()
+            {
+                Carrier = "AC",
+                IsITDEligible = true,
+                Market = Flight.FlightMarket.Transborder
+            };
             Route ineligibleRoute = new Route()
             {
                 IsITDEligible = false
@@ -42,26 +64,50 @@ namespace BrockSolutions.ITDService.UnitTests
         }
 
         [Fact]
+        public void notDomesticConnection_notITDEligible()
+        {
+            ITDEligibilityProvider provider = TestHelpers.CreateITDProvider();
+            Passenger validPassenger = new Passenger()
+            {
+                PassengerID = 0,
+                CheckedBagCount = 2,
+                HasIneligibleBCBP = false,
+                HasIneligibleBSM = false
+            };
+
+            Flight notDomesticConnectionFlight = new Flight()
+            {
+                Carrier = "AC",
+                IsITDEligible = true,
+                Market = Flight.FlightMarket.International
+            };
+            Route validRoute = new Route()
+            {
+                IsITDEligible = true
+            };
+
+            bool result = provider.CheckIfPassengerisITDEligible(validPassenger, notDomesticConnectionFlight, validRoute);
+            Assert.False(result);
+        }
+
+        [Fact]
         public void ineligibleCarrier_notITDEligible()
         {
-            ITDEligibilityProvider provider = TestHelpers.CreateProvider();
-            List<BCBP> validBCBPs = new List<BCBP>()
+            ITDEligibilityProvider provider = TestHelpers.CreateITDProvider();
+            Passenger validPassenger = new Passenger()
             {
-                new BCBP()
-                {
-                    IsITDEligible = true
-                }
+                PassengerID = 0,
+                CheckedBagCount = 2,
+                HasIneligibleBCBP = false,
+                HasIneligibleBSM = false
             };
-            List<BSM> validBSMs = new List<BSM>()
-            {
-                new BSM()
-                {
-                    IsITDEligible = true
-                }
-            };
-            Passenger validPassenger = new Passenger(2, false, false);
 
-            Flight invalidCarrierFlight = new Flight("VA", true);
+            Flight invalidCarrierFlight = new Flight()
+            {
+                Carrier = "VA",
+                IsITDEligible = true,
+                Market = Flight.FlightMarket.Transborder
+            };
             Route validRoute = new Route()
             {
                 IsITDEligible = true
@@ -74,10 +120,21 @@ namespace BrockSolutions.ITDService.UnitTests
         [Fact]
         public void noCheckedBags_notITDEligible()
         {
-            ITDEligibilityProvider provider = TestHelpers.CreateProvider();
-            Passenger noBagPassenger = new Passenger(0, false, false);
+            ITDEligibilityProvider provider = TestHelpers.CreateITDProvider();
+            Passenger noBagPassenger = new Passenger()
+            {
+                PassengerID = 0,
+                CheckedBagCount = 0,
+                HasIneligibleBCBP = false,
+                HasIneligibleBSM = false
+            };
 
-            Flight validFlight = new Flight("AC", true);
+            Flight validFlight = new Flight()
+            {
+                Carrier = "AC",
+                IsITDEligible = true,
+                Market = Flight.FlightMarket.Transborder
+            };
             Route validRoute = new Route()
             {
                 IsITDEligible = true
@@ -90,11 +147,21 @@ namespace BrockSolutions.ITDService.UnitTests
         [Fact]
         public void ineligibleBCBP_notITDEligible()
         {
-            ITDEligibilityProvider provider = TestHelpers.CreateProvider();
-            Passenger badBCBPPassenger = new Passenger(2, false, false);
-            badBCBPPassenger.HasIneligibleBCBP = true;
+            ITDEligibilityProvider provider = TestHelpers.CreateITDProvider();
+            Passenger badBCBPPassenger = new Passenger()
+            {
+                PassengerID = 0,
+                CheckedBagCount = 2,
+                HasIneligibleBCBP = true,
+                HasIneligibleBSM = false
+            };
 
-            Flight validFlight = new Flight("AC", true);
+            Flight validFlight = new Flight()
+            {
+                Carrier = "AC",
+                IsITDEligible = true,
+                Market = Flight.FlightMarket.Transborder
+            };
             Route validRoute = new Route()
             {
                 IsITDEligible = true
@@ -107,11 +174,21 @@ namespace BrockSolutions.ITDService.UnitTests
         [Fact]
         public void ineligibleBSM_notITDEligible()
         {
-            ITDEligibilityProvider provider = TestHelpers.CreateProvider();
-            Passenger badBSMPassenger = new Passenger(2, false, false);
-            badBSMPassenger.HasIneligibleBSM = true;
+            ITDEligibilityProvider provider = TestHelpers.CreateITDProvider();
+            Passenger badBSMPassenger = new Passenger()
+            {
+                PassengerID = 0,
+                CheckedBagCount = 2,
+                HasIneligibleBCBP = false,
+                HasIneligibleBSM = true
+            };
 
-            Flight validFlight = new Flight("AC", true);
+            Flight validFlight = new Flight()
+            {
+                Carrier = "AC",
+                IsITDEligible = true,
+                Market = Flight.FlightMarket.Transborder
+            };
             Route validRoute = new Route()
             {
                 IsITDEligible = true
@@ -124,10 +201,21 @@ namespace BrockSolutions.ITDService.UnitTests
         [Fact]
         public void ineligibleFlight_notITDEligible()
         {
-            ITDEligibilityProvider provider = TestHelpers.CreateProvider();
-            Passenger validPassenger = new Passenger(2, false, false);
+            ITDEligibilityProvider provider = TestHelpers.CreateITDProvider();
+            Passenger validPassenger = new Passenger()
+            {
+                PassengerID = 0,
+                CheckedBagCount = 2,
+                HasIneligibleBCBP = false,
+                HasIneligibleBSM = false
+            };
 
-            Flight ineligibleFlight = new Flight("AC", false);
+            Flight ineligibleFlight = new Flight()
+            {
+                Carrier = "AC",
+                IsITDEligible = false,
+                Market = Flight.FlightMarket.Transborder
+            };
             Route validRoute = new Route()
             {
                 IsITDEligible = true

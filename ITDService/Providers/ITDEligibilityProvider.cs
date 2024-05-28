@@ -33,6 +33,11 @@ namespace BrockSolutions.ITDService.Providers
                 return false;
             }
 
+            if (flight.Market != Flight.FlightMarket.Transborder)
+            {
+               return false;
+            }
+
             if (!flight.IsITDEligible)
             {
                 return false;

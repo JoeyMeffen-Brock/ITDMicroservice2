@@ -8,6 +8,7 @@ namespace BrockSolutions.ITDService
 {
     public class BCBP
     {
+        public int PassengerID { get; set; } = -1;
         public bool IsITDEligible { get; set; } = false;
     }
 }

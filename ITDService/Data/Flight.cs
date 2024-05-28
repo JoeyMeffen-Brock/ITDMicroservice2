@@ -8,8 +8,22 @@ namespace BrockSolutions.ITDService
 {
     public class Flight
     {
-        public string Carrier { get; set; }
-        public bool IsITDEligible { get; set; }
+        public enum FlightMarket
+        {
+            None,
+            Domestic,
+            International,
+            Transborder
+        }
+
+        public string Carrier { get; set; } = "";
+        public bool IsITDEligible { get; set; } = false;
+        public FlightMarket Market = FlightMarket.None;
+
+        public Flight()
+        {
+        
+        }
 
         public Flight(string carrier, bool isITDEligible)
         {

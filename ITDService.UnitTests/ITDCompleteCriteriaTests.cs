@@ -12,18 +12,27 @@ namespace BrockSolutions.ITDService.UnitTests
         [Fact]
         public void noCriteriaMet_isNotITDComplete()
         {
-            ITDEligibilityProvider provider = TestHelpers.CreateProvider();
-            Passenger incompletePassenger = new Passenger(0, false, false);
+            ITDEligibilityProvider provider = TestHelpers.CreateITDProvider();
+            Passenger incompletePassenger = new Passenger()
+            {
+                PassengerID = 0,
+                CheckedBagCount = 0,
+            };
 
             bool result = provider.CheckIfPassengerIsITDComplete(incompletePassenger);
             Assert.False(result);
         }
 
         [Fact]
-        public void passengerBoardedAtSmartGate_isITDComplete()
+        public void passengerScannedAtSmartGate_isITDComplete()
         {
-            ITDEligibilityProvider provider = TestHelpers.CreateProvider();
-            Passenger smartGateScannedPassenger = new Passenger(0, true, false);
+            ITDEligibilityProvider provider = TestHelpers.CreateITDProvider();
+            Passenger smartGateScannedPassenger = new Passenger()
+            {
+                PassengerID = 0,
+                CheckedBagCount = 0,
+                ScannedAtSmartGate = true
+            };
 
             bool result = provider.CheckIfPassengerIsITDComplete(smartGateScannedPassenger);
             Assert.True(result);
@@ -32,8 +41,13 @@ namespace BrockSolutions.ITDService.UnitTests
         [Fact]
         public void passengerHasBDXMessage_isITDComplete()
         {
-            ITDEligibilityProvider provider = TestHelpers.CreateProvider();
-            Passenger bdxMessagePassenger = new Passenger(0, false, true);
+            ITDEligibilityProvider provider = TestHelpers.CreateITDProvider();
+            Passenger bdxMessagePassenger = new Passenger()
+            {
+                PassengerID = 0,
+                CheckedBagCount = 0,
+                HasBDXMessage = true
+            };
 
             bool result = provider.CheckIfPassengerIsITDComplete(bdxMessagePassenger);
             Assert.True(result);
@@ -42,9 +56,13 @@ namespace BrockSolutions.ITDService.UnitTests
         [Fact]
         public void passengerHasBoardedBSM_isITDComplete()
         {
-            ITDEligibilityProvider provider = TestHelpers.CreateProvider();
-            Passenger boardedBSMPassenger = new Passenger(0, false, false);
-            boardedBSMPassenger.HasBoardedBSM = true;
+            ITDEligibilityProvider provider = TestHelpers.CreateITDProvider();
+            Passenger boardedBSMPassenger = new Passenger()
+            {
+                PassengerID = 0,
+                CheckedBagCount = 0,
+                HasBoardedBSM = true
+            };
 
             bool result = provider.CheckIfPassengerIsITDComplete(boardedBSMPassenger);
             Assert.True(result);
