@@ -6,6 +6,7 @@ using Moq;
 using BrockSolutions.ITDService.Providers;
 using BrockSolutions.ITDService.Data;
 using BrockSolutions.SmartSuite.Events;
+using BrockSolutions.ITDService.UnitTests.TestHelpers;
 
 namespace BrockSolutions.ITDService.UnitTests.ProviderTests
 {
@@ -14,7 +15,7 @@ namespace BrockSolutions.ITDService.UnitTests.ProviderTests
         [Fact]
         public void validInput_itdIsEligible()
         {
-            ITDEligibilityProvider provider = TestHelpers.CreateITDProvider();
+            ITDEligibilityProvider provider = ITDEligibilityTestHelpers.CreateITDProvider();
 
             Passenger validPassenger = new Passenger()
             {
@@ -60,7 +61,7 @@ namespace BrockSolutions.ITDService.UnitTests.ProviderTests
         [Fact]
         public void inboundFlightNotEligible_notITDEligible()
         {
-            ITDEligibilityProvider provider = TestHelpers.CreateITDProvider();
+            ITDEligibilityProvider provider = ITDEligibilityTestHelpers.CreateITDProvider();
 
             Passenger ineligibleRoutePassenger = new Passenger()
             {
@@ -106,7 +107,7 @@ namespace BrockSolutions.ITDService.UnitTests.ProviderTests
         [Fact]
         public void notDomesticConnection_notITDEligible()
         {
-            ITDEligibilityProvider provider = TestHelpers.CreateITDProvider();
+            ITDEligibilityProvider provider = ITDEligibilityTestHelpers.CreateITDProvider();
             Passenger notDomesticPassenger = new Passenger()
             {
                 FlightLegs = new List<Flight>()
@@ -151,7 +152,7 @@ namespace BrockSolutions.ITDService.UnitTests.ProviderTests
         [Fact]
         public void ineligibleCarrier_notITDEligible()
         {
-            ITDEligibilityProvider provider = TestHelpers.CreateITDProvider();
+            ITDEligibilityProvider provider = ITDEligibilityTestHelpers.CreateITDProvider();
 
             Passenger badCarrierPassenger = new Passenger()
             {
@@ -197,7 +198,7 @@ namespace BrockSolutions.ITDService.UnitTests.ProviderTests
         [Fact]
         public void noCheckedBags_notITDEligible()
         {
-            ITDEligibilityProvider provider = TestHelpers.CreateITDProvider();
+            ITDEligibilityProvider provider = ITDEligibilityTestHelpers.CreateITDProvider();
 
             Passenger noCheckedBagPassenger = new Passenger()
             {
@@ -243,7 +244,7 @@ namespace BrockSolutions.ITDService.UnitTests.ProviderTests
         [Fact]
         public void inputMarkedAsIneligible_notITDEligible()
         {
-            ITDEligibilityProvider provider = TestHelpers.CreateITDProvider();
+            ITDEligibilityProvider provider = ITDEligibilityTestHelpers.CreateITDProvider();
 
             Passenger markedIneligiblePassenger = new Passenger()
             {
@@ -289,7 +290,7 @@ namespace BrockSolutions.ITDService.UnitTests.ProviderTests
         [Fact]
         public void ineligibleFlight_notITDEligible()
         {
-            ITDEligibilityProvider provider = TestHelpers.CreateITDProvider();
+            ITDEligibilityProvider provider = ITDEligibilityTestHelpers.CreateITDProvider();
 
             Passenger ineligibleFlightPassenger = new Passenger()
             {

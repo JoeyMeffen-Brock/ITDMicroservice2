@@ -12,9 +12,9 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Moq;
 
-namespace BrockSolutions.ITDService.UnitTests
+namespace BrockSolutions.ITDService.UnitTests.TestHelpers
 {
-    public static class TestHelpers
+    public static class ITDEligibilityTestHelpers
     {
         public static ITDEligibilityProvider CreateITDProvider()
         {
@@ -53,7 +53,5 @@ namespace BrockSolutions.ITDService.UnitTests
                 _postITDLocations = new List<string> { "Post ITD Location", };
             }
         }
-
-
     }
 }
