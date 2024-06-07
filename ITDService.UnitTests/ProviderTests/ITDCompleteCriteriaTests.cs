@@ -4,6 +4,7 @@ using Microsoft.Extensions.Options;
 using Microsoft.Extensions.Logging;
 using Moq;
 using BrockSolutions.ITDService.Providers;
+using BrockSolutions.ITDService.Data;
 
 namespace BrockSolutions.ITDService.UnitTests
 {
@@ -13,11 +14,7 @@ namespace BrockSolutions.ITDService.UnitTests
         public void noCriteriaMet_isNotITDComplete()
         {
             ITDEligibilityProvider provider = TestHelpers.CreateITDProvider();
-            Passenger incompletePassenger = new Passenger()
-            {
-                PassengerID = 0,
-                CheckedBagCount = 0,
-            };
+            Passenger incompletePassenger = new Passenger();
 
             bool result = provider.CheckIfPassengerIsITDComplete(incompletePassenger);
             Assert.False(result);
@@ -29,8 +26,6 @@ namespace BrockSolutions.ITDService.UnitTests
             ITDEligibilityProvider provider = TestHelpers.CreateITDProvider();
             Passenger smartGateScannedPassenger = new Passenger()
             {
-                PassengerID = 0,
-                CheckedBagCount = 0,
                 ScannedAtSmartGate = true
             };
 
@@ -42,14 +37,12 @@ namespace BrockSolutions.ITDService.UnitTests
         public void passengerHasBDXMessage_isITDComplete()
         {
             ITDEligibilityProvider provider = TestHelpers.CreateITDProvider();
-            Passenger bdxMessagePassenger = new Passenger()
+            Passenger bdxScannedPassenger = new Passenger()
             {
-                PassengerID = 0,
-                CheckedBagCount = 0,
                 HasBDXMessage = true
             };
 
-            bool result = provider.CheckIfPassengerIsITDComplete(bdxMessagePassenger);
+            bool result = provider.CheckIfPassengerIsITDComplete(bdxScannedPassenger);
             Assert.True(result);
         }
 
@@ -59,13 +52,37 @@ namespace BrockSolutions.ITDService.UnitTests
             ITDEligibilityProvider provider = TestHelpers.CreateITDProvider();
             Passenger boardedBSMPassenger = new Passenger()
             {
-                PassengerID = 0,
-                CheckedBagCount = 0,
                 HasBoardedBSM = true
             };
 
             bool result = provider.CheckIfPassengerIsITDComplete(boardedBSMPassenger);
             Assert.True(result);
+        }
+
+        [Fact]
+        public void passengerHasTrackingScanAtPostITDLocation_isITDComplete()
+        {
+            ITDEligibilityProvider provider = TestHelpers.CreateITDProvider();
+            Passenger postITDPassenger = new Passenger()
+            {
+                LastScannedLocation = "Post ITD Location"
+            };
+
+            bool result = provider.CheckIfPassengerIsITDComplete(postITDPassenger);
+            Assert.True(result);
+        }
+
+        [Fact]
+        public void passengerHasTrackingScanAtNonPostITDLocation_isNotITDComplete()
+        {
+            ITDEligibilityProvider provider = TestHelpers.CreateITDProvider();
+            Passenger nonPostITDPassenger = new Passenger()
+            {
+                LastScannedLocation = "Not Post ITD Location"
+            };
+
+            bool result = provider.CheckIfPassengerIsITDComplete(nonPostITDPassenger);
+            Assert.False(result);
         }
     }
 }

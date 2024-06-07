@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BrockSolutions.ITDService
+namespace BrockSolutions.ITDService.Data
 {
-    public class Flight
+    public record Flight
     {
         public enum FlightMarket
         {
@@ -16,19 +16,11 @@ namespace BrockSolutions.ITDService
             Transborder
         }
 
-        public string Carrier { get; set; } = "";
-        public bool IsITDEligible { get; set; } = false;
-        public FlightMarket Market = FlightMarket.None;
-
-        public Flight()
-        {
-        
-        }
-
-        public Flight(string carrier, bool isITDEligible)
-        {
-            Carrier = carrier;
-            IsITDEligible = isITDEligible;
-        }
+        public long DepartureDateLocal { get; set; } = 0;
+        public string FlightNumber { get; set; } = "";
+        public string CarrierCode { get; set; } = "";
+        public string DepartureStation { get; set; } = "";
+        public string ArrivalStation { get; set; } = "";
+        public FlightMarket Market { get; set; } = FlightMarket.None;
     }
 }

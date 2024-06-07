@@ -4,7 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using BrockSolutions.DapperWrapper;
+using BrockSolutions.ITDService.Data;
 using BrockSolutions.ITDService.Options;
+using BrockSolutions.SmartSuite.Events;
 using Microsoft.Extensions.Options;
 
 namespace BrockSolutions.ITDService.Providers
@@ -16,7 +18,11 @@ namespace BrockSolutions.ITDService.Providers
         private readonly IOptionsMonitor<ITDServiceParameters> _parameters;
 
         // This is a placeholder for a database of passengers. Replace this and all references to it with real database lookups when we have the database.
-        private static readonly List<Passenger> PLACEHOLDER_PASSENGER_DATABASE = new List<Passenger> { new Passenger(1, 0, false, false) };
+        private static readonly List<Passenger> PLACEHOLDER_PASSENGER_DATABASE = new List<Passenger> { new Passenger() };
+
+        private static readonly string CHECKED_BAG_TYPE = "Checked";
+
+        protected StateProvider _stateProvider;
 
         public PassengerProvider
         (
@@ -28,57 +34,165 @@ namespace BrockSolutions.ITDService.Providers
             _dapperQueryExecutor = queryExecutor;
             _logger = logger;
             _parameters = parameters;
+            _stateProvider = new JSONStateProvider();
         }
 
-
-        public virtual bool AddPassengerToDatabase(Passenger passenger)
+        public virtual Passenger UpdatePassengerFromBagCreated(BagCreated bagCreatedEvent) 
         {
-            return true;
-        }
-
-        public virtual Passenger? GetPassengerByID(int passengerId)
-        {
-            return PLACEHOLDER_PASSENGER_DATABASE.FirstOrDefault(passenger => passenger.PassengerID == passengerId);
-        }
-
-        //Returns updated passenger, or null if not found
-        public Passenger? UpdatePassengersFromBSM(BSM bsm)
-        {
-            Passenger? passengerToChange = GetPassengerByID(bsm.PassengerID);
-            if (passengerToChange == null)
+            try
             {
-                _logger.LogError($"Could not find passenger with ID {bsm.PassengerID} in database.");
+                Passenger passengerToUpdate = _stateProvider.GetPassengerByBookingID(bagCreatedEvent.BookingId);
+                if (!passengerToUpdate.Bags.Any(bag => bag.BagId == bagCreatedEvent.BagId)) {
+                    passengerToUpdate.Bags.Add(new Bag()
+                    {
+                        BagId = bagCreatedEvent.BagId,
+                        //TODO: might be able to simplify this to just check if any leg has a checked bag
+                        CheckedBag = bagCreatedEvent.BagFlightLegs.FirstOrDefault(leg => leg.FlightDepartureStationCode == bagCreatedEvent.StationCode)?.BagType == CHECKED_BAG_TYPE,
+                    });
+                    //TODO: assuming that we don't need to add the flight legs to the passenger if they already exist, but could ask
+                }
+                _stateProvider.UpdatePassengerByBookingID(passengerToUpdate);
+                return passengerToUpdate;
+            } catch (StateProvider.PassengerNotFoundException)  
+            {
+                //passenger not found, create a new passenger
+                Passenger newPassenger = new Passenger()
+                {
+                    BookingID = bagCreatedEvent.BookingId,
+                    Bags = new List<Bag>()
+                    {
+                        new Bag()
+                        {
+                            BagId = bagCreatedEvent.BagId,
+                            CheckedBag = bagCreatedEvent.BagFlightLegs.FirstOrDefault(leg => leg.FlightDepartureStationCode == bagCreatedEvent.StationCode)?.BagType == CHECKED_BAG_TYPE,
+                        }
+                    },
+                    FlightLegs = bagCreatedEvent.FlightLegs.Select(leg => new Flight()
+                    {
+                        FlightNumber = leg.FlightNumber,
+                        CarrierCode = leg.FlightCarrierCode,
+                        DepartureDateLocal = leg.FlightDepartureDateLocal,
+                        Market = Flight.FlightMarket.Domestic,  //TODO: Replace with actual logic when we have access to the flight market
+                    }).ToList()
+                };
+                _stateProvider.AddPassenger(newPassenger);
+                return newPassenger;
+            }
+        }
+
+        public virtual Passenger UpdatePassengerFromBagItineraryChanged(BagItineraryChanged itineraryChangedEvent)
+        {
+            Passenger passengerToUpdate;
+            try
+            {
+                passengerToUpdate = _stateProvider.GetPassengerByBookingID(itineraryChangedEvent.BookingId);
+                //TODO: double-check that MasterBagId is equivalent to BagId
+                if (!passengerToUpdate.Bags.Any(bag => bag.BagId == itineraryChangedEvent.MasterBagId))
+                {
+                    //bag not in record, add it
+                    passengerToUpdate.Bags.Add(new Bag()
+                    {
+                        BagId = itineraryChangedEvent.MasterBagId,
+                        //TODO: may need to add some check using station if it gets added to this event later
+                        CheckedBag = itineraryChangedEvent.BagFlightLegs.Any(leg => leg.BagType == CHECKED_BAG_TYPE),
+                    });
+                } else
+                {
+                    //bag in record, update it
+                    passengerToUpdate.Bags.First(bag => bag.BagId == itineraryChangedEvent.MasterBagId).CheckedBag = itineraryChangedEvent.BagFlightLegs.Any(leg => leg.BagType == CHECKED_BAG_TYPE);
+                }
+                //TODO: Not sure about this one
+                //update flight legs to match new itinerary
+                passengerToUpdate.FlightLegs = itineraryChangedEvent.FlightLegs.Select(leg => new Flight()
+                {
+                    FlightNumber = leg.FlightNumber,
+                    CarrierCode = leg.FlightCarrierCode,
+                    DepartureDateLocal = leg.FlightDepartureDateLocal,
+                    Market = Flight.FlightMarket.Domestic,  //TODO: Replace with actual logic when we have access to the flight market
+                }).ToList();
+                _stateProvider.UpdatePassengerByBookingID(passengerToUpdate);
+                return passengerToUpdate;
+            }
+            catch (StateProvider.PassengerNotFoundException)
+            {
+                //passenger not found, create a new passenger
+                passengerToUpdate = new Passenger()
+                {
+                    BookingID = itineraryChangedEvent.BookingId,
+                    Bags = new List<Bag>()
+                    {
+                        new Bag()
+                        {
+                            BagId = itineraryChangedEvent.MasterBagId,
+                            //TODO: may need to add some check using station if it gets added to this event later
+                            CheckedBag = itineraryChangedEvent.BagFlightLegs.Any(leg => leg.BagType == CHECKED_BAG_TYPE),
+                        }
+                    },
+                    FlightLegs = itineraryChangedEvent.FlightLegs.Select(leg => new Flight()
+                    {
+                        FlightNumber = leg.FlightNumber,
+                        CarrierCode = leg.FlightCarrierCode,
+                        DepartureDateLocal = leg.FlightDepartureDateLocal,
+                        Market = Flight.FlightMarket.Domestic,  //TODO: Replace with actual logic when we have access to the flight market
+                    }).ToList()
+                };
+                _stateProvider.AddPassenger(passengerToUpdate);
+                return passengerToUpdate;
+            }
+        }
+
+        public virtual Passenger? UpdatePassengerFromBagPropertyChanged(BagPropertyChanged propertyChangedEvent)
+        {
+            Passenger passengerToUpdate;
+            try
+            {
+                passengerToUpdate = _stateProvider.GetPassengerByBagID(propertyChangedEvent.MasterBagId);
+                //TODO: double-check that MasterBagId is equivalent to BagId
+                if (!passengerToUpdate.Bags.Any(bag => bag.BagId == propertyChangedEvent.MasterBagId))
+                {
+                    //bag not in record, add it
+                    passengerToUpdate.Bags.Add(new Bag()
+                    {
+                        BagId = propertyChangedEvent.MasterBagId,
+                        //TODO: modify stuff based on the properties changed
+                        //CheckedBag = propertyChangedEvent.BagFlightLegs.Any(leg => leg.BagType == "CheckedBag"),
+                    });
+                }
+                else
+                {
+                    //bag in record, update it
+                    //TODO: modify stuff based on the properties changed
+                    //passengerToUpdate.Bags.First(bag => bag.BagId == propertyChangedEvent.MasterBagId).CheckedBag = propertyChangedEvent.BagFlightLegs.Any(leg => leg.BagType == "CheckedBag");
+                }
+                _stateProvider.UpdatePassengerByBagID(passengerToUpdate, propertyChangedEvent.MasterBagId);
+                return passengerToUpdate;
+            }
+            catch (StateProvider.PassengerNotFoundException)
+            {
+                //passenger not found, create a new passenger
+
+                //No bookingID in this event, so we can't really create a new passenger
+                /*passengerToUpdate = new Passenger()
+                {
+                    BookingID = propertyChangedEvent.BookingId,
+                    Bags = new List<Bag>()
+                    {
+                        new Bag()
+                        {
+                            BagId = propertyChangedEvent.MasterBagId,
+                            CheckedBag = propertyChangedEvent.BagFlightLegs.FirstOrDefault(leg => leg.FlightDepartureStationCode == propertyChangedEvent.StationCode)?.BagType == "Checked",
+                        }
+                    },
+                    FlightLegs = propertyChangedEvent.FlightLegs.Select(leg => new Flight()
+                    {
+                        FlightNumber = leg.FlightNumber,
+                        CarrierCode = leg.FlightCarrierCode,
+                        DepartureDate = leg.FlightDepartureDateLocal,
+                        Market = Flight.FlightMarket.Domestic,  //TODO: Replace with actual logic when we have access to the flight market
+                    }).ToList()
+                };*/
                 return null;
             }
-
-            if (!bsm.IsITDEligible)
-            {
-                passengerToChange.HasIneligibleBSM = true;
-            }
-
-            if (bsm.BoardedBSM)
-            {
-                passengerToChange.HasBoardedBSM = true;
-            }
-
-            return passengerToChange;
-        }
-
-        public Passenger? UpdatePassengersFromBCBP(BCBP bcbp)
-        {
-            Passenger? passengerToChange = GetPassengerByID(bcbp.PassengerID);
-            if (passengerToChange == null)
-            {
-                _logger.LogError($"Could not find passenger with ID {bcbp.PassengerID} in database.");
-                return null;
-            }
-
-            if (!bcbp.IsITDEligible)
-            {
-                passengerToChange.HasIneligibleBCBP = true;
-            }
-
-            return passengerToChange;
         }
     }
 }

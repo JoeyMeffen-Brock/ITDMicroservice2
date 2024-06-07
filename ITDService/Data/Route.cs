@@ -4,10 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BrockSolutions.ITDService
+namespace BrockSolutions.ITDService.Data
 {
-    public class Route
+    public record Route
     {
-        public bool IsITDEligible { get; set; } = false;
+        public string originatingStationCode { get; set; } = "";
+        public string destinationStationCode { get; set; } = "";
+        public string airlineCode { get; set; } = "";
     }
 }

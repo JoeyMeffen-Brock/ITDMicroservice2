@@ -5,7 +5,7 @@ VisualStudioVersion = 17.8.34525.116
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BrockSolutions.ITDService", "ITDService\BrockSolutions.ITDService.csproj", "{E2A6541C-1F55-47FF-9184-22E92E9F08D9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BrockSolutions.ITDService.UnitTests", "ITDService.UnitTests\BrockSolutions.ITDService.UnitTests.csproj", "{BC98E339-6EFA-4430-BD0E-CC14728C8479}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BrockSolutions.ITDService.UnitTests", "ITDService.UnitTests\BrockSolutions.ITDService.UnitTests.csproj", "{BC98E339-6EFA-4430-BD0E-CC14728C8479}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
