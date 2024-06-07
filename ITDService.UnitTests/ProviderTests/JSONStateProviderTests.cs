@@ -37,7 +37,8 @@ namespace BrockSolutions.ITDService.UnitTests.ProviderTests
                 JSONStateProvider jsonStateProvider = new JSONStateProvider();
                 jsonStateProvider.AddPassenger(testPassenger);
                 string resultJson = File.ReadAllText(JSONStateProvider.FILE_NAME);
-                List<Passenger> resultList = JsonConvert.DeserializeObject<List<Passenger>>(resultJson);
+                List<Passenger>? resultList = JsonConvert.DeserializeObject<List<Passenger>>(resultJson);
+                Assert.NotNull(resultList);
                 Assert.Single(resultList);
                 Assert.Equal(testPassenger, resultList[0]);
             } finally
@@ -108,7 +109,7 @@ namespace BrockSolutions.ITDService.UnitTests.ProviderTests
                     Passenger outputPassenger = jsonStateProvider.GetPassengerByBookingID(10);
                     Assert.Fail("failed to trigger exception");
                 }
-                catch (FileNotFoundException e)
+                catch (FileNotFoundException)
                 {
 
                 } 
@@ -131,7 +132,7 @@ namespace BrockSolutions.ITDService.UnitTests.ProviderTests
                     Passenger outputPassenger = jsonStateProvider.GetPassengerByBookingID(55);
                     Assert.Fail("failed to trigger exception");
                 }
-                catch (JsonReaderException e)
+                catch (JsonReaderException)
                 {
 
                 }
@@ -242,7 +243,7 @@ namespace BrockSolutions.ITDService.UnitTests.ProviderTests
                     Passenger outputPassenger = jsonStateProvider.GetPassengerByBagID(1);
                     Assert.Fail("failed to trigger exception");
                 }
-                catch (FileNotFoundException e)
+                catch (FileNotFoundException)
                 {
 
                 }
@@ -265,7 +266,7 @@ namespace BrockSolutions.ITDService.UnitTests.ProviderTests
                     Passenger outputPassenger = jsonStateProvider.GetPassengerByBagID(1);
                     Assert.Fail("failed to trigger exception");
                 }
-                catch (JsonReaderException e)
+                catch (JsonReaderException)
                 {
 
                 }
@@ -364,7 +365,8 @@ namespace BrockSolutions.ITDService.UnitTests.ProviderTests
                 jsonStateProvider.UpdatePassengerByBookingID(testPassenger1);
 
                 string resultJson = File.ReadAllText(JSONStateProvider.FILE_NAME);
-                List<Passenger> resultList = JsonConvert.DeserializeObject<List<Passenger>>(resultJson);
+                List<Passenger>? resultList = JsonConvert.DeserializeObject<List<Passenger>>(resultJson);
+                Assert.NotNull(resultList);
                 Assert.Equal(2, resultList.Count);
                 Assert.Contains(testPassenger1, resultList);
                 Assert.Contains(testPassenger2, resultList);
@@ -387,7 +389,7 @@ namespace BrockSolutions.ITDService.UnitTests.ProviderTests
                     Passenger outputPassenger = jsonStateProvider.GetPassengerByBookingID(55);
                     Assert.Fail("failed to trigger exception");
                 }
-                catch (JsonReaderException e)
+                catch (JsonReaderException)
                 {
 
                 }
@@ -488,7 +490,8 @@ namespace BrockSolutions.ITDService.UnitTests.ProviderTests
                 jsonStateProvider.UpdatePassengerByBagID(testPassenger1, 2);
 
                 string resultJson = File.ReadAllText(JSONStateProvider.FILE_NAME);
-                List<Passenger> resultList = JsonConvert.DeserializeObject<List<Passenger>>(resultJson);
+                List<Passenger>? resultList = JsonConvert.DeserializeObject<List<Passenger>>(resultJson);
+                Assert.NotNull(resultList);
                 Assert.Equal(2, resultList.Count);
                 Assert.Contains(testPassenger1, resultList);
                 Assert.Contains(testPassenger2, resultList);
@@ -511,7 +514,7 @@ namespace BrockSolutions.ITDService.UnitTests.ProviderTests
                     Passenger outputPassenger = jsonStateProvider.GetPassengerByBagID(1);
                     Assert.Fail("failed to trigger exception");
                 }
-                catch (JsonReaderException e)
+                catch (JsonReaderException)
                 {
 
                 }
@@ -604,7 +607,8 @@ namespace BrockSolutions.ITDService.UnitTests.ProviderTests
             File.WriteAllText(JSONStateProvider.FILE_NAME, JsonConvert.SerializeObject(new List<Passenger> { testPassenger1, testPassenger2 }));
             jsonStateProvider.DeletePassengerByBookingID(10);
             string resultJson = File.ReadAllText(JSONStateProvider.FILE_NAME);
-            List<Passenger> resultList = JsonConvert.DeserializeObject<List<Passenger>>(resultJson);
+            List<Passenger>? resultList = JsonConvert.DeserializeObject<List<Passenger>>(resultJson);
+            Assert.NotNull(resultList);
             Assert.Single(resultList);
             Assert.Equal(testPassenger2, resultList[0]);
         }
@@ -621,7 +625,7 @@ namespace BrockSolutions.ITDService.UnitTests.ProviderTests
                     jsonStateProvider.DeletePassengerByBookingID(55);
                     Assert.Fail("failed to trigger exception");
                 }
-                catch (JsonReaderException e)
+                catch (JsonReaderException)
                 {
 
                 }

@@ -29,5 +29,11 @@ namespace BrockSolutions.ITDService.Data
                    ScannedAtSmartGate == passenger.ScannedAtSmartGate &&
                    HasBDXMessage == passenger.HasBDXMessage;
         }
+
+        //adding this to avoid warning about overriding Equals without GetHashCode
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(BookingID, Bags, FlightLegs, MarkedAsIneligible, HasBoardedBSM, ScannedAtSmartGate, HasBDXMessage);
+        }
     }
 }
