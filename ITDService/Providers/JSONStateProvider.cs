@@ -9,7 +9,7 @@ using Newtonsoft.Json;
 
 namespace BrockSolutions.ITDService.Providers
 {
-    public class JSONStateProvider : StateProvider
+    public class JSONStateProvider : IStateProvider
     {
         public const string FILE_NAME = "bookings.json";
 
@@ -53,13 +53,13 @@ namespace BrockSolutions.ITDService.Providers
             List<Passenger>? passengerList = JsonConvert.DeserializeObject<List<Passenger>>(convertedPassengers);
             if (passengerList == null)
             {
-                throw new StateProvider.PassengerNotFoundException("Could not find passenger with booking ID " + bookingID);
+                throw new IStateProvider.PassengerNotFoundException("Could not find passenger with booking ID " + bookingID);
             }
 
             Passenger? resultPassenger = passengerList.FirstOrDefault(passenger => passenger.BookingID == bookingID);
             if (resultPassenger == null)
             {
-                throw new StateProvider.PassengerNotFoundException("Could not find passenger with booking ID " + bookingID);
+                throw new IStateProvider.PassengerNotFoundException("Could not find passenger with booking ID " + bookingID);
             }
 
             return resultPassenger;
@@ -71,13 +71,13 @@ namespace BrockSolutions.ITDService.Providers
             List<Passenger>? passengerList = JsonConvert.DeserializeObject<List<Passenger>>(convertedPassengers);
             if (passengerList == null)
             {
-                throw new StateProvider.PassengerNotFoundException("Could not find passenger with bag ID " + bagID);
+                throw new IStateProvider.PassengerNotFoundException("Could not find passenger with bag ID " + bagID);
             }
 
             Passenger? existingPassenger = passengerList.FirstOrDefault(passenger => passenger.Bags.Any(bag => bag.BagId == bagID));
             if (existingPassenger == null)
             {
-                throw new StateProvider.PassengerNotFoundException("Could not find passenger with bag ID " + bagID);
+                throw new IStateProvider.PassengerNotFoundException("Could not find passenger with bag ID " + bagID);
             }
 
             return existingPassenger;
@@ -90,13 +90,13 @@ namespace BrockSolutions.ITDService.Providers
             List<Passenger>? passengerList = JsonConvert.DeserializeObject<List<Passenger>>(convertedPassengers);
             if (passengerList == null)
             {
-                throw new StateProvider.PassengerNotFoundException("Could not find passenger with booking ID " + passengerToUpdate.BookingID);
+                throw new IStateProvider.PassengerNotFoundException("Could not find passenger with booking ID " + passengerToUpdate.BookingID);
             }
 
             Passenger? existingPassenger = passengerList.FirstOrDefault(passenger => passenger.BookingID == passengerToUpdate.BookingID);
             if (existingPassenger == null)
             {
-                throw new StateProvider.PassengerNotFoundException("Could not find passenger with booking ID " + passengerToUpdate.BookingID);
+                throw new IStateProvider.PassengerNotFoundException("Could not find passenger with booking ID " + passengerToUpdate.BookingID);
             }
 
             passengerList.Remove(existingPassenger);
@@ -112,13 +112,13 @@ namespace BrockSolutions.ITDService.Providers
             List<Passenger>? passengerList = JsonConvert.DeserializeObject<List<Passenger>>(convertedPassengers);
             if (passengerList == null)
             {
-                throw new StateProvider.PassengerNotFoundException("Could not find passenger with bag ID " + bagID);
+                throw new IStateProvider.PassengerNotFoundException("Could not find passenger with bag ID " + bagID);
             }
 
             Passenger? resultPassenger = passengerList.FirstOrDefault(passenger => passenger.Bags.Any(bag => bag.BagId == bagID));
             if (resultPassenger == null)
             {
-                throw new StateProvider.PassengerNotFoundException("Could not find passenger with bag ID " + bagID);
+                throw new IStateProvider.PassengerNotFoundException("Could not find passenger with bag ID " + bagID);
             }
 
             passengerList.Remove(resultPassenger);
@@ -134,13 +134,13 @@ namespace BrockSolutions.ITDService.Providers
             List<Passenger>? passengerList = JsonConvert.DeserializeObject<List<Passenger>>(convertedPassengers);
             if (passengerList == null)
             {
-                throw new StateProvider.PassengerNotFoundException("Could not find passenger with booking ID " + bookingID);
+                throw new IStateProvider.PassengerNotFoundException("Could not find passenger with booking ID " + bookingID);
             }
 
             Passenger? resultPassenger = passengerList.FirstOrDefault(passenger => passenger.BookingID == bookingID);
             if (resultPassenger == null)
             {
-                throw new StateProvider.PassengerNotFoundException("Could not find passenger with booking ID " + bookingID);
+                throw new IStateProvider.PassengerNotFoundException("Could not find passenger with booking ID " + bookingID);
             }
 
             passengerList.Remove(resultPassenger);

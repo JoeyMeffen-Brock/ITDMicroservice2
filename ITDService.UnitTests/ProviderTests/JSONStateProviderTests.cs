@@ -169,7 +169,7 @@ namespace BrockSolutions.ITDService.UnitTests.ProviderTests
                 {
                     Passenger outputPassenger = jsonStateProvider.GetPassengerByBookingID(55);
                     Assert.Fail("failed to trigger exception");
-                } catch (StateProvider.PassengerNotFoundException e)
+                } catch (IStateProvider.PassengerNotFoundException e)
                 {
                     Assert.Equal("Could not find passenger with booking ID 55", e.Message);
                 }
@@ -304,7 +304,7 @@ namespace BrockSolutions.ITDService.UnitTests.ProviderTests
                     Passenger outputPassenger = jsonStateProvider.GetPassengerByBagID(5);
                     Assert.Fail("failed to trigger exception");
                 }
-                catch (StateProvider.PassengerNotFoundException e)
+                catch (IStateProvider.PassengerNotFoundException e)
                 {
                     Assert.Equal("Could not find passenger with bag ID 5", e.Message);
                 }
@@ -428,7 +428,7 @@ namespace BrockSolutions.ITDService.UnitTests.ProviderTests
                 {
                     jsonStateProvider.UpdatePassengerByBookingID(testPassenger);
                     Assert.Fail();
-                } catch (StateProvider.PassengerNotFoundException e)
+                } catch (IStateProvider.PassengerNotFoundException e)
                 {
                     Assert.Equal("Could not find passenger with booking ID 55", e.Message);
                 }
@@ -553,7 +553,7 @@ namespace BrockSolutions.ITDService.UnitTests.ProviderTests
                     jsonStateProvider.UpdatePassengerByBagID(testPassenger, 5);
                     Assert.Fail();
                 }
-                catch (StateProvider.PassengerNotFoundException e)
+                catch (IStateProvider.PassengerNotFoundException e)
                 {
                     Assert.Equal("Could not find passenger with bag ID 5", e.Message);
                 }
@@ -660,7 +660,7 @@ namespace BrockSolutions.ITDService.UnitTests.ProviderTests
                     jsonStateProvider.DeletePassengerByBookingID(55);
                     Assert.Fail();
                 }
-                catch (StateProvider.PassengerNotFoundException e)
+                catch (IStateProvider.PassengerNotFoundException e)
                 {
                     Assert.Equal("Could not find passenger with booking ID 55", e.Message);
                 }

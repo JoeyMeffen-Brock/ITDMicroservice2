@@ -7,7 +7,7 @@ using BrockSolutions.ITDService.Data;
 
 namespace BrockSolutions.ITDService.Providers
 {
-    public interface StateProvider
+    public interface IStateProvider
     {
         public List<Passenger> AddPassenger(Passenger passenger);
         public Passenger GetPassengerByBookingID(long bookingID);

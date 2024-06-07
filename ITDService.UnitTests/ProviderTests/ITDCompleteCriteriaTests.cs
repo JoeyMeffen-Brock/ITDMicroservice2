@@ -6,7 +6,7 @@ using Moq;
 using BrockSolutions.ITDService.Providers;
 using BrockSolutions.ITDService.Data;
 
-namespace BrockSolutions.ITDService.UnitTests
+namespace BrockSolutions.ITDService.UnitTests.ProviderTests
 {
     public class ITDCompleteCriteriaTests
     {

@@ -729,7 +729,7 @@ namespace BrockSolutions.ITDService.UnitTests.ProviderTests
         }
 
 
-        public class TestStateProvider : StateProvider
+        public class TestStateProvider : IStateProvider
         {
             public List<Passenger> FakeDatabase = new List<Passenger>();
             public TestStateProvider() : base()
@@ -747,7 +747,7 @@ namespace BrockSolutions.ITDService.UnitTests.ProviderTests
                 Passenger? passenger = FakeDatabase.FirstOrDefault(passenger => passenger.BookingID == bookingID);
                 if (passenger == null)
                 {
-                    throw new StateProvider.PassengerNotFoundException("Could not find passenger with booking ID " + bookingID);
+                    throw new IStateProvider.PassengerNotFoundException("Could not find passenger with booking ID " + bookingID);
                 }
                 return passenger;
             }
@@ -757,7 +757,7 @@ namespace BrockSolutions.ITDService.UnitTests.ProviderTests
                 Passenger? passenger = FakeDatabase.FirstOrDefault(passenger => passenger.Bags.Any(b => b.BagId == bagID));
                 if (passenger == null)
                 {
-                    throw new StateProvider.PassengerNotFoundException("Could not find passenger with bag ID " + bagID);
+                    throw new IStateProvider.PassengerNotFoundException("Could not find passenger with bag ID " + bagID);
                 }
                 return passenger;
             }
@@ -771,7 +771,7 @@ namespace BrockSolutions.ITDService.UnitTests.ProviderTests
                     FakeDatabase.Add(passengerToUpdate);
                 } else
                 {
-                    throw new StateProvider.PassengerNotFoundException("Could not find passenger with booking ID " + passengerToUpdate.BookingID);
+                    throw new IStateProvider.PassengerNotFoundException("Could not find passenger with booking ID " + passengerToUpdate.BookingID);
                 }
             }
 
@@ -784,7 +784,7 @@ namespace BrockSolutions.ITDService.UnitTests.ProviderTests
                     FakeDatabase.Add(existingPassenger);
                 } else
                 {
-                    throw new StateProvider.PassengerNotFoundException("Could not find passenger with bag ID " + bagID);
+                    throw new IStateProvider.PassengerNotFoundException("Could not find passenger with bag ID " + bagID);
                 }
             }
 
@@ -796,7 +796,7 @@ namespace BrockSolutions.ITDService.UnitTests.ProviderTests
                     FakeDatabase.Remove(existingPassenger);
                 } else
                 {
-                    throw new StateProvider.PassengerNotFoundException("Could not find passenger with booking ID " + bookingID);
+                    throw new IStateProvider.PassengerNotFoundException("Could not find passenger with booking ID " + bookingID);
                 }
             }
         }

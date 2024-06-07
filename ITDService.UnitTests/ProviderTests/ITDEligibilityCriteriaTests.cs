@@ -7,7 +7,7 @@ using BrockSolutions.ITDService.Providers;
 using BrockSolutions.ITDService.Data;
 using BrockSolutions.SmartSuite.Events;
 
-namespace BrockSolutions.ITDService.UnitTests
+namespace BrockSolutions.ITDService.UnitTests.ProviderTests
 {
     public class ITDEligibilityCriteriaTests
     {

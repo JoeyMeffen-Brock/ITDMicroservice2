@@ -21,7 +21,7 @@ namespace BrockSolutions.ITDService.Providers
         //TODO: Probably need more details than just a string, replace with a real location type later when API is more fleshed out
         protected static List<string> _postITDLocations = new List<string> { };
 
-        protected StateProvider _stateProvider;
+        protected IStateProvider _stateProvider;
 
         public ITDEligibilityProvider
         (

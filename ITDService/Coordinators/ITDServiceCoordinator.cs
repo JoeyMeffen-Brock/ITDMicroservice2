@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 //using BrockSolutions.ITDService.Events;
-using BrockSolutions.ITDService.Mappers;
 using BrockSolutions.ITDService.Providers;
 using BrockSolutions.SmartSuite.Events;
 using NLog.Fluent;

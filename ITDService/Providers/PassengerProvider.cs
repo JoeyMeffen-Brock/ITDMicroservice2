@@ -22,7 +22,7 @@ namespace BrockSolutions.ITDService.Providers
 
         private static readonly string CHECKED_BAG_TYPE = "Checked";
 
-        protected StateProvider _stateProvider;
+        protected IStateProvider _stateProvider;
 
         public PassengerProvider
         (
@@ -53,7 +53,7 @@ namespace BrockSolutions.ITDService.Providers
                 }
                 _stateProvider.UpdatePassengerByBookingID(passengerToUpdate);
                 return passengerToUpdate;
-            } catch (StateProvider.PassengerNotFoundException)  
+            } catch (IStateProvider.PassengerNotFoundException)  
             {
                 //passenger not found, create a new passenger
                 Passenger newPassenger = new Passenger()
@@ -113,7 +113,7 @@ namespace BrockSolutions.ITDService.Providers
                 _stateProvider.UpdatePassengerByBookingID(passengerToUpdate);
                 return passengerToUpdate;
             }
-            catch (StateProvider.PassengerNotFoundException)
+            catch (IStateProvider.PassengerNotFoundException)
             {
                 //passenger not found, create a new passenger
                 passengerToUpdate = new Passenger()
@@ -167,7 +167,7 @@ namespace BrockSolutions.ITDService.Providers
                 _stateProvider.UpdatePassengerByBagID(passengerToUpdate, propertyChangedEvent.MasterBagId);
                 return passengerToUpdate;
             }
-            catch (StateProvider.PassengerNotFoundException)
+            catch (IStateProvider.PassengerNotFoundException)
             {
                 //passenger not found, create a new passenger
 
