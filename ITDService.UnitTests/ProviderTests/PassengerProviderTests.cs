@@ -23,7 +23,7 @@ namespace BrockSolutions.ITDService.UnitTests.ProviderTests
             BagCreated bagCreated = new BagCreated()
             {
                 BookingId = 5,
-                BagId = 2,
+                MasterBagId = 2,
                 StationCode = "YYZ",
             };
             bagCreated.BagFlightLegs.Add(new BagFlightLeg()
@@ -77,7 +77,7 @@ namespace BrockSolutions.ITDService.UnitTests.ProviderTests
             BagCreated bagCreated = new BagCreated
             {
                 BookingId = 5,
-                BagId = 2,
+                MasterBagId = 2,
                 StationCode = "YYZ",
             };
             bagCreated.BagFlightLegs.Add(new BagFlightLeg()
@@ -147,7 +147,7 @@ namespace BrockSolutions.ITDService.UnitTests.ProviderTests
             BagCreated bagCreated = new BagCreated
             {
                 BookingId = 5,
-                BagId = 2,
+                MasterBagId = 2,
                 StationCode = "YYZ",
             };
             bagCreated.BagFlightLegs.Add(new BagFlightLeg
@@ -204,7 +204,7 @@ namespace BrockSolutions.ITDService.UnitTests.ProviderTests
             BagCreated bagCreated = new BagCreated
             {
                 BookingId = 5,
-                BagId = 2,
+                MasterBagId = 2,
                 StationCode = "YYZ",
             };
             bagCreated.BagFlightLegs.Add(new BagFlightLeg

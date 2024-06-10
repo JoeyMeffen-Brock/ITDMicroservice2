@@ -42,10 +42,10 @@ namespace BrockSolutions.ITDService.Providers
             try
             {
                 Passenger passengerToUpdate = _stateProvider.GetPassengerByBookingID(bagCreatedEvent.BookingId);
-                if (!passengerToUpdate.Bags.Any(bag => bag.BagId == bagCreatedEvent.BagId)) {
+                if (!passengerToUpdate.Bags.Any(bag => bag.BagId == bagCreatedEvent.MasterBagId)) {
                     passengerToUpdate.Bags.Add(new Bag()
                     {
-                        BagId = bagCreatedEvent.BagId,
+                        BagId = bagCreatedEvent.MasterBagId,
                         //TODO: might be able to simplify this to just check if any leg has a checked bag
                         CheckedBag = bagCreatedEvent.BagFlightLegs.FirstOrDefault(leg => leg.FlightDepartureStationCode == bagCreatedEvent.StationCode)?.BagType == CHECKED_BAG_TYPE,
                     });
@@ -63,7 +63,7 @@ namespace BrockSolutions.ITDService.Providers
                     {
                         new Bag()
                         {
-                            BagId = bagCreatedEvent.BagId,
+                            BagId = bagCreatedEvent.MasterBagId,
                             CheckedBag = bagCreatedEvent.BagFlightLegs.FirstOrDefault(leg => leg.FlightDepartureStationCode == bagCreatedEvent.StationCode)?.BagType == CHECKED_BAG_TYPE,
                         }
                     },
